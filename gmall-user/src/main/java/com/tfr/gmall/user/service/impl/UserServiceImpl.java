@@ -1,3 +1,4 @@
+/*
 package com.tfr.gmall.user.service.impl;
 
 import com.tfr.gmall.bean.UmsMember;
@@ -5,7 +6,6 @@ import com.tfr.gmall.bean.UmsMemberReceiveAddress;
 import com.tfr.gmall.service.UserService;
 
 import com.tfr.gmall.user.mapper.UmsMemberReceiveAddressMapper;
-import com.tfr.gmall.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -34,3 +34,4 @@ public class UserServiceImpl implements UserService {
         return umsMemberReceiveAddresses;
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.tfr.gmall.user.controller;
 
 import com.tfr.gmall.bean.UmsMember;
@@ -37,3 +38,4 @@ public class UserController {
     }
 
 }
+*/
