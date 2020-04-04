@@ -48,4 +48,5 @@ public class AttrController {
         List<PmsBaseSaleAttr> pmsBaseAttrValues= attrService.baseSaleAttrList();
         return pmsBaseAttrValues;
     }
+
 }
