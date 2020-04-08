@@ -6,3 +6,6 @@ gmall-user-web用户服务层8080
 
 gmall-manage-service 用户服务的service层8071
 gmall-manage-web用户服务层8081
+
+#gmall-item-service 用户服务的service层8072 spu、sku的信息
+gmall-item-web用户服务层8082

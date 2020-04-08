@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    i love you baby,wj
+    <br/>
+    {i}
+    <p th:text="${i}">111</p>
+    <p th:each="str:${list}" th:text="${str}"></p>
+
+    <p th:each="str:${list}">
+        <input th:text="${str}" th:value="${str}">登录</input>
+    </p>
+    <p th:if="1==1">我踏过你走过的路，这算不算相逢</p>
+    <p th:if="1==2">不算</p>
+三元运算符：
+    <input type="checkbox" th:checked="${check}=='1'"/>
+    <a th:href="'javascript:f(\''+${i}+'\');'">傻呀</a>
+
+
+<script language="JavaScript">
+    function f(i) {
+        alert("啦啦啦"+i)
+    }
+</script>
+</body>
+</html>
