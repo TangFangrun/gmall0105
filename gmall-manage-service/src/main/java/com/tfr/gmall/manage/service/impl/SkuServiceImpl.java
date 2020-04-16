@@ -19,6 +19,7 @@ import redis.clients.jedis.Jedis;
 import tk.mybatis.mapper.util.StringUtil;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SkuServiceImpl implements SkuService {
@@ -85,35 +86,50 @@ public class SkuServiceImpl implements SkuService {
     @Override
     public PmsSkuInfo getSkuById(String skuId) {
         PmsSkuInfo pmsSkuInfo = new PmsSkuInfo();
-        Jedis jedis=null;
+        Jedis jedis = null;
         //链接缓存
         try {
             jedis = redisUtil.getJedis();
             //查询缓存
             String skuKey = "sku:" + skuId + ":info";
             String skuJson = jedis.get(skuKey);
-
-            //查询数据库
             if (StringUtils.isNotBlank(skuJson)) {
                 pmsSkuInfo = JSON.parseObject(skuJson, PmsSkuInfo.class);
             } else {
-                //结果存入redis
-                pmsSkuInfo = getSkuByIdFromDb(skuId);
-            }
-            if (pmsSkuInfo != null) {
-                //结果存入redis
-                jedis.set("sku" + skuId + "info", JSON.toJSONString(pmsSkuInfo));
-            }else {
-                //数据库不存在sku  ，解决缓存穿透（给redis设置null或者空）
-                jedis.setex("sku" + skuId + "info", 60*3,JSON.toJSONString(" "));
+                //设置分布式锁
+                String token = UUID.randomUUID().toString();
+                String OK = jedis.set("sku:" + skuId + ":lock", token, "nx", "px", 10 * 1000);
+                if (StringUtils.isNotBlank(OK) && OK.equals("OK")) {
+                    //查询数据库
+                    //设置成功，有权在10s过期时间访问数据库
+                    pmsSkuInfo = getSkuByIdFromDb(skuId);
+                    if (pmsSkuInfo != null) {
+                        //结果存入redis
+                        jedis.set("sku:" + skuId + ":info", JSON.toJSONString(pmsSkuInfo));
+
+                    } else {
+                        //数据库不存在sku  ，解决缓存穿透（给redis设置null或者空）
+                        jedis.setex("sku:" + skuId + ":info", 60 * 3, JSON.toJSONString(" "));
+                    }
+                    //释放锁
+                    String lockToken = jedis.get("sku:" + skuId + ":info");
+                    if(StringUtils.isNotBlank(lockToken)&&lockToken.equals(token)){
+                        //用token确认删除的是自己的锁
+                        jedis.del("sku:" + skuId + ":lock");
+                    }
+
+                } else {
+                    //设置失败，自旋（该线程在睡眠几秒后，重新尝试访问该方法）
+                    Thread.sleep(3000);
+                    return getSkuById(skuId);
+                }
 
             }
-
 
             return pmsSkuInfo;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             jedis.close();
         }
         return null;
@@ -122,6 +138,19 @@ public class SkuServiceImpl implements SkuService {
     @Override
     public List<PmsSkuInfo> getSkuSaleAttrValueListBySqu(String productId) {
         List<PmsSkuInfo> pmsSkuInfos = pmsSkuInfoMapper.selectSkuSaleAttrValueListBySqu(productId);
+        return pmsSkuInfos;
+    }
+
+    @Override
+    public List<PmsSkuInfo> getAllSku(String catalog3Id) {
+        List<PmsSkuInfo> pmsSkuInfos = pmsSkuInfoMapper.selectAll();
+        for (PmsSkuInfo pmsSkuInfo : pmsSkuInfos) {
+            String skuId = pmsSkuInfo.getId();
+            PmsSkuAttrValue pmsSkuAttrValue=new PmsSkuAttrValue();
+            pmsSkuAttrValue.setSkuId(skuId);
+            List<PmsSkuAttrValue> select = pmsSkuAttrValueMapper.select(pmsSkuAttrValue);
+            pmsSkuInfo.setSkuAttrValueList(select);
+        }
         return pmsSkuInfos;
     }
 }
