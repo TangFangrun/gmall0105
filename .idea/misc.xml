@@ -24,6 +24,8 @@
         <option value="$PROJECT_DIR$/gmall-search-service/pom.xml" />
         <option value="$PROJECT_DIR$/gmall-cart-service/pom.xml" />
         <option value="$PROJECT_DIR$/gmall-cart-web/pom.xml" />
+        <option value="$PROJECT_DIR$/gmall-possport-web/pom.xml" />
+        <option value="$PROJECT_DIR$/gmall-order-web/pom.xml" />
       </list>
     </option>
   </component>

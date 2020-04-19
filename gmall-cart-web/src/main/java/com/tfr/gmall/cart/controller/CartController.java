@@ -2,12 +2,13 @@ package com.tfr.gmall.cart.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
+import com.tfr.gmall.annotations.LoginRequire;
 import com.tfr.gmall.bean.OmsCartItem;
 import com.tfr.gmall.bean.PmsSkuInfo;
 import com.tfr.gmall.service.CartService;
 import com.tfr.gmall.service.SkuService;
 //import com.tfr.gmall.util.CookieUtil;
-import com.tfr.util.CookieUtil;
+import com.tfr.gmall.util.CookieUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,13 +30,21 @@ public class CartController {
     @Reference
     CartService cartService;
 
+    @RequestMapping("toTrade")
+    @LoginRequire(loginSuccess = true)
+    public String toTrade(HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {
+        String memberId = (String) request.getAttribute("memberId");
+        String nickname = (String) request.getAttribute("nickname");
+        return "toTrade";
+    }
 
 
     @RequestMapping("checkCart")
-    public String checkCart(String isChecked,String skuId,HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {
+    @LoginRequire(loginSuccess = false)
+    public String checkCart(String isChecked, String skuId, HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {
 
-        String memberId = "1";
-
+        String memberId = (String) request.getAttribute("memberId");
+        String nickname = (String) request.getAttribute("nickname");
         // 调用服务，修改状态
         OmsCartItem omsCartItem = new OmsCartItem();
         omsCartItem.setMemberId(memberId);
@@ -45,17 +54,21 @@ public class CartController {
 
         // 将最新的数据从缓存中查出，渲染给内嵌页
         List<OmsCartItem> omsCartItems = cartService.cartList(memberId);
-        modelMap.put("cartList",omsCartItems);
+        modelMap.put("cartList", omsCartItems);
+        //被勾选的商品的总额
+        BigDecimal totalAmount = getTotalAmount(omsCartItems);
+        modelMap.put("totalAmount", totalAmount);
         return "cartListInner";
     }
 
 
-
     @RequestMapping("cartList")
+    @LoginRequire(loginSuccess = false)
     public String cartList(HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {
 
         List<OmsCartItem> omsCartItems = new ArrayList<>();
-        String memberId = "1";
+        String memberId = (String) request.getAttribute("memberId");
+        String nickname = (String) request.getAttribute("nickname");
 
         if (StringUtils.isNotBlank(memberId)) {
             // 已经登录查询db
@@ -71,12 +84,26 @@ public class CartController {
         for (OmsCartItem omsCartItem : omsCartItems) {
             omsCartItem.setTotalPrice(omsCartItem.getPrice().multiply(omsCartItem.getQuantity()));
         }
-
         modelMap.put("cartList", omsCartItems);
+        //被勾选的商品的总额
+        BigDecimal totalAmount = getTotalAmount(omsCartItems);
+        modelMap.put("totalAmount", totalAmount);
         return "cartList";
     }
 
+    private BigDecimal getTotalAmount(List<OmsCartItem> omsCartItems) {
+        BigDecimal totalAmount = new BigDecimal("0");
+        for (OmsCartItem omsCartItem : omsCartItems) {
+            BigDecimal totalPrice = omsCartItem.getTotalPrice();
+            if (omsCartItem.getIsChecked().equals("1")) {
+                totalAmount = totalAmount.add(totalPrice);
+            }
+        }
+        return totalAmount;
+    }
+
     @RequestMapping("addToCart")
+    @LoginRequire(loginSuccess = false)
     public String addToCart(String skuId, int quantity, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         List<OmsCartItem> omsCartItems = new ArrayList<>();
 
@@ -101,8 +128,9 @@ public class CartController {
 
 
         // 判断用户是否登录
-        String memberId = "1";//"1";
-
+        String memberId = (String) request.getAttribute("memberId");
+        String nickname = (String) request.getAttribute("nickname");
+        request.getAttribute("memberId");
         if (StringUtils.isBlank(memberId)) {
             // 用户没有登录
 

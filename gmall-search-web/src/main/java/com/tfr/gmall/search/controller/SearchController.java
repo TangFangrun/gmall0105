@@ -1,6 +1,7 @@
 package com.tfr.gmall.search.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.tfr.gmall.annotations.LoginRequire;
 import com.tfr.gmall.bean.*;
 import com.tfr.gmall.service.AttrService;
 import com.tfr.gmall.service.SearchService;
@@ -158,6 +159,7 @@ public class SearchController {
     }
 
     @RequestMapping("index")
+    @LoginRequire(loginSuccess = false)
     public String index() {
         return "index";
     }

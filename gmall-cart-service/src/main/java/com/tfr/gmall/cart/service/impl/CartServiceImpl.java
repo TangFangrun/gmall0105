@@ -59,6 +59,7 @@ public class CartServiceImpl implements CartService {
             jedis = redisUtil.getJedis();
             Map<String, String> map = new HashMap<>();
             for (OmsCartItem cartItem : omsCartItems) {
+                cartItem.setTotalPrice(cartItem.getPrice().multiply(cartItem.getQuantity()));
                 map.put(cartItem.getProductSkuId(), JSON.toJSONString(cartItem));
             }
             jedis.del("user:" + memberId + ":cart");

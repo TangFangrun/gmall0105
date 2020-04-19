@@ -15,3 +15,9 @@ gmall-search-service 8074
 
 gmall-cart-service 购物车8073
 gmall-cart-web 8084
+
+gmall-passprot-web 用户认证中心8085
+gmall-user-service 用户服务的service层8070
+
+gmall-order-web 8086
+gmall-order-sercice 订单服务 8076
