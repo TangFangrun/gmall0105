@@ -68,14 +68,14 @@ public class PassportController {
         umsCheck.setSourceUid(umsMember.getSourceUid());
         UmsMember umsMemberCheck = userService.checkOauthUser(umsCheck);
         if (umsMemberCheck == null) {
-            userService.addOauthUser(umsMember);
+           umsMember= userService.addOauthUser(umsMember);
         } else {
             umsMember = umsMemberCheck;
             //      userService.getOauthUser(umsMemberCheck);
         }
 
         //生成jwt的token，并且重定向到首页，携带该token
-        String token = "";
+        String token = null;
         jwtToken(umsMember,request,token);
     /*    String token = null;
         String memberId = umsMember.getId();
@@ -108,7 +108,7 @@ public class PassportController {
      */
     @RequestMapping("verify")
     @ResponseBody
-    public String verify(String token, String currentIp, HttpServletRequest request) {
+    public String verify(String token, String currentIp) {
         Map<String, String> map = new HashMap<>();
 
 
@@ -136,25 +136,25 @@ public class PassportController {
 
 
             //用jwt制作token
-            jwtToken(umsMember,request,token);
-//            String memberId = umsMemberLogin.getId();
-//            String nickname = umsMemberLogin.getNickname();
-//            Map<String, Object> userMap = new HashMap<>();
-//            userMap.put("memberId", memberId);
-//            userMap.put("nickname", nickname);
-//
-//            String ip = request.getHeader("x-forwarded-for");//通过nginx转发的客户端ip
-//            if (StringUtils.isBlank(ip)) {
-//                ip = request.getRemoteAddr();//从request中获取客户端ip
-//                if (StringUtils.isBlank(ip)) {
-//                    ip = "127.0.0.1";
-//                }
-//            }
-//            //需要按照设计的算法进行加密，生成token
-//            token = JwtUtil.encode("2020gmall0105", userMap, ip);
-//
-//            //将token存入redis
-//            userService.addUserToken(token, memberId);
+          //  jwtToken(umsMember,request,token);
+            String memberId = umsMemberLogin.getId();
+            String nickname = umsMemberLogin.getNickname();
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("memberId", memberId);
+            userMap.put("nickname", nickname);
+
+            String ip = request.getHeader("x-forwarded-for");//通过nginx转发的客户端ip
+            if (StringUtils.isBlank(ip)) {
+                ip = request.getRemoteAddr();//从request中获取客户端ip
+                if (StringUtils.isBlank(ip)) {
+                    ip = "127.0.0.1";
+                }
+            }
+            //需要按照设计的算法进行加密，生成token
+            token = JwtUtil.encode("2020gmall0105", userMap, ip);
+
+            //将token存入redis
+            userService.addUserToken(token, memberId);
 
         } else {
             //登录失败
@@ -169,8 +169,9 @@ public class PassportController {
         map.put("ReturnUrl", ReturnUrl);
         return "index";
     }
+
     public void jwtToken(UmsMember umsMember,HttpServletRequest request,String token){
-        String memberId = umsMember.getId();
+        String memberId = umsMember.getId();//为空值
         String nickname = umsMember.getNickname();
         Map<String,Object> userMap = new HashMap<>();
         userMap.put("memberId",memberId);

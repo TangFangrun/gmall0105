@@ -23,7 +23,8 @@ public class SearchController {
     AttrService attrService;
 
     @RequestMapping("list.html")
-    public String list(PmsSearchParam pmsSearchParam, ModelMap modelMap) {// 三级分类id、关键字、
+    public String list(PmsSearchParam pmsSearchParam, ModelMap modelMap) {
+        // 三级分类id、关键字、
 
         // 调用搜索服务，返回搜索结果
         List<PmsSearchSkuInfo> pmsSearchSkuInfos = searchService.list(pmsSearchParam);
@@ -149,9 +150,9 @@ public class SearchController {
         if (skuAttrValueList != null) {
 
             for (String pmsSkuAttrValue : skuAttrValueList) {
-                if (pmsSkuAttrValue.equals(delValueId)) {
-                    urlParam = urlParam + "&valueId=" + pmsSkuAttrValue;
-                }
+
+                urlParam = urlParam + "&valueId=" + pmsSkuAttrValue;
+
             }
         }
 

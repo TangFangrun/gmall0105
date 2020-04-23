@@ -19,5 +19,6 @@ gmall-cart-web 8084
 gmall-passprot-web 用户认证中心8085
 gmall-user-service 用户服务的service层8070
 
-gmall-order-web 8086
-gmall-order-sercice 订单服务 8076
+gmall-order-web 8088
+gmall-order-sercice 订单服务 8078
+gmall-payment 8089
