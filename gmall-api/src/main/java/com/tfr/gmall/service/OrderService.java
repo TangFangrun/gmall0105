@@ -11,6 +11,8 @@ public interface OrderService {
 
     void saveOrder(OmsOrder omsOrder);
 
+    OmsOrder getOrderByOutTradeNo(String outTradeNo);
+
 
     //   boolean checkPrice(String productSkuId, BigDecimal productPrice);
 }
