@@ -84,14 +84,15 @@ public class PaymentController {
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
-        OmsOrder omsOrder=orderService.getOrderByOutTradeNo(outTradeNo);
-        PaymentInfo paymentInfo=new PaymentInfo();
+        OmsOrder omsOrder = orderService.getOrderByOutTradeNo(outTradeNo);
+        PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setCreateTime(new Date());
         paymentInfo.setOrderSn(outTradeNo);
         paymentInfo.setPaymentStatus("未付款");
         paymentInfo.setSubject("商品一件.......");
         paymentInfo.setTotalAmount(totalAmount);
-
+        //向消息中间件发送一个检查支付状态的延迟消息队列
+        paymentService.sendDelayPaymentResultCheckQueue(outTradeNo, 5);
         //生成并且保存用户的支护信息
         paymentService.savePaymentInfo(paymentInfo);
         return form;
@@ -109,7 +110,7 @@ public class PaymentController {
         String total_amount = request.getParameter("total_amount");
         String subject = request.getParameter("subject");
         String call_back_content = request.getQueryString();
-        if(StringUtils.isNotBlank(sign)){
+        if (StringUtils.isNotBlank(sign)) {
             // 验签成功
             // 更新用户的支付状态
 
@@ -119,7 +120,7 @@ public class PaymentController {
             paymentInfo.setAlipayTradeNo(trade_no);// 支付宝的交易凭证号
             paymentInfo.setCallbackContent(call_back_content);//回调请求字符串
             paymentInfo.setCallbackTime(new Date());
-
+            //更新用户的支付状态
             paymentService.updatePayment(paymentInfo);
 
         }

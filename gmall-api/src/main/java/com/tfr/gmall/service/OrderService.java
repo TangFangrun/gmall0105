@@ -13,6 +13,8 @@ public interface OrderService {
 
     OmsOrder getOrderByOutTradeNo(String outTradeNo);
 
+    void updateOrder(OmsOrder omsOrder);
+
 
     //   boolean checkPrice(String productSkuId, BigDecimal productPrice);
 }

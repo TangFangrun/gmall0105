@@ -84,7 +84,7 @@ public class OrderController {
             omsOrder.setReceiveTime(time);
 
             omsOrder.setSourceType(1);
-            omsOrder.setStatus(0);
+            omsOrder.setStatus("0");
             omsOrder.setTotalAmount(totalAmount);
 
 

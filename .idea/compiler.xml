@@ -13,6 +13,7 @@
         <module name="demo" />
         <module name="gmall-manage-web" />
         <module name="gmall-redisson-test" />
+        <module name="gmall-seckil" />
         <module name="gmall-order-service" />
         <module name="fastdfs-client-java" />
         <module name="gmall-cart-service" />
@@ -20,6 +21,7 @@
         <module name="gmall-manage-service" />
         <module name="gmall-payment" />
         <module name="gmall-user-service" />
+        <module name="gware-manage" />
         <module name="gmall-service-util" />
         <module name="gmall-cart-web" />
         <module name="gmall-user-web" />
@@ -48,11 +50,13 @@
       <module name="gmall-redisson-test" target="1.8" />
       <module name="gmall-search-service" target="1.8" />
       <module name="gmall-search-web" target="1.8" />
+      <module name="gmall-seckil" target="1.8" />
       <module name="gmall-service-util" target="1.8" />
       <module name="gmall-user" target="1.8" />
       <module name="gmall-user-service" target="1.8" />
       <module name="gmall-user-web" target="1.8" />
       <module name="gmall-web-util" target="1.8" />
+      <module name="gware-manage" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -71,6 +75,7 @@
       <module name="gmall-redisson-test" options="" />
       <module name="gmall-search-service" options="" />
       <module name="gmall-search-web" options="" />
+      <module name="gmall-seckil" options="" />
       <module name="gmall-user" options="" />
       <module name="gmall-user-service" options="" />
       <module name="gmall-user-web" options="" />

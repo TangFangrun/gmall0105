@@ -35,6 +35,7 @@
     <file url="file://$PROJECT_DIR$/gmall-search-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-search-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-search-web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gmall-seckil" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-service-util" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-service-util/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-user" charset="UTF-8" />
@@ -45,5 +46,6 @@
     <file url="file://$PROJECT_DIR$/gmall-user/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-web-util" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-web-util/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gware-manage" charset="UTF-8" />
   </component>
 </project>
